@@ -13,43 +13,74 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
-
   final List<ExpenseModel> _registeredExpenses = [
     ExpenseModel(
-      title: 'Flutter Course', 
-      amount: 399, 
-      date: DateTime.now(), 
-      category: Category.work
-    ),
+        title: 'Flutter Course',
+        amount: 399,
+        date: DateTime.now(),
+        category: Category.work),
     ExpenseModel(
-      title: 'VR Mall', 
-      amount: 299, 
-      date: DateTime.now(), 
-      category: Category.leisure
-    ),
+        title: 'VR Mall',
+        amount: 299,
+        date: DateTime.now(),
+        category: Category.leisure),
   ];
 
-  void _addExpense(ExpenseModel expense){
+  void _addExpense(ExpenseModel expense) {
     setState(() {
-       _registeredExpenses.add(expense);
+      _registeredExpenses.add(expense);
     });
   }
 
-  void _modalOpen(){
+  void _removeExpense(ExpenseModel expense) {
+    final expensesIndex = _registeredExpenses.indexOf(expense);
+    setState(() {
+      _registeredExpenses.remove(expense);
+    });
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 3),
+        content: const Text('Expense Deleted'),
+        action: SnackBarAction(label: 'Undo', onPressed: (){
+          setState(() {
+            _registeredExpenses.insert(expensesIndex, expense);
+          });
+        }),
+        ));
+  }
+
+  void _modalOpen() {
     // context have widget metadata information related to widget and widget's ui position
     // builder returns a function. here ctx is a context of the bottomModal
-    showModalBottomSheet(context: context, builder: (ctx)=> NewExpense(onAddExpense: _addExpense,),isScrollControlled: true);
-    
+    showModalBottomSheet(
+        context: context,
+        builder: (ctx) => NewExpense(
+              onAddExpense: _addExpense,
+            ),
+        isScrollControlled: true);
   }
 
 
 
+ 
   @override
+
   Widget build(BuildContext context) {
+        Widget startingMessage = const Center(
+    child: Text("No expense found. Try adding some"),
+  );
+   if(_registeredExpenses.isNotEmpty){
+    startingMessage = ExpensesList(
+            expenses: _registeredExpenses,
+            onRemoveExpense: _removeExpense,
+          );
+  }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Abhay Expense Tracker"),
-        backgroundColor: Colors.lightBlue,
+        // backgroundColor: Colors.lightBlue,
         actions: [
           IconButton(
             // using function without () means we are not executing it we are just passing walue when pressed
@@ -61,7 +92,9 @@ class _ExpensesState extends State<Expenses> {
       body: Column(
         children: [
           const Text("The Chart"),
-          Expanded(child: ExpensesList(expenses: _registeredExpenses)),
+          Expanded(
+              child:startingMessage 
+              ),
         ],
       ),
     );

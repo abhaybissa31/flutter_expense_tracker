@@ -83,7 +83,8 @@ class _NewExpenseState extends State<NewExpense> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextField(
-            controller: _titleInput,
+            controller:_titleInput,
+            keyboardType: TextInputType.text,
             maxLength: 50,
             decoration: const InputDecoration(labelText: "Title"),
           ),
@@ -93,7 +94,7 @@ class _NewExpenseState extends State<NewExpense> {
               Expanded(
                 child: TextField(
                   controller: _amountInput,
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.phone,
                   maxLength: 50,
                   decoration: const InputDecoration(
                       prefixText: 'Rs.', labelText: "Amount"),
