@@ -29,11 +29,17 @@ class _ExpensesState extends State<Expenses> {
     ),
   ];
 
+  void _addExpense(ExpenseModel expense){
+    setState(() {
+       _registeredExpenses.add(expense);
+    });
+  }
 
   void _modalOpen(){
     // context have widget metadata information related to widget and widget's ui position
     // builder returns a function. here ctx is a context of the bottomModal
-    showModalBottomSheet(context: context, builder: (ctx)=> NewExpense(),);
+    showModalBottomSheet(context: context, builder: (ctx)=> NewExpense(onAddExpense: _addExpense,),isScrollControlled: true);
+    
   }
 
 
