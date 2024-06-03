@@ -1,5 +1,6 @@
 import 'package:expense_tracker/models/expensemodel.dart';
 import 'package:expense_tracker/widgets/add_expense_modal.dart';
+import 'package:expense_tracker/widgets/chart/chart.dart';
 import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
 import 'package:flutter/material.dart';
 
@@ -38,16 +39,17 @@ class _ExpensesState extends State<Expenses> {
       _registeredExpenses.remove(expense);
     });
     ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: const Duration(seconds: 3),
-        content: const Text('Expense Deleted'),
-        action: SnackBarAction(label: 'Undo', onPressed: (){
-          setState(() {
-            _registeredExpenses.insert(expensesIndex, expense);
-          });
-        }),
-        ));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      duration: const Duration(seconds: 3),
+      content: const Text('Expense Deleted'),
+      action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {
+            setState(() {
+              _registeredExpenses.insert(expensesIndex, expense);
+            });
+          }),
+    ));
   }
 
   void _modalOpen() {
@@ -61,21 +63,17 @@ class _ExpensesState extends State<Expenses> {
         isScrollControlled: true);
   }
 
-
-
- 
   @override
-
   Widget build(BuildContext context) {
-        Widget startingMessage = const Center(
-    child: Text("No expense found. Try adding some"),
-  );
-   if(_registeredExpenses.isNotEmpty){
-    startingMessage = ExpensesList(
-            expenses: _registeredExpenses,
-            onRemoveExpense: _removeExpense,
-          );
-  }
+    Widget startingMessage = const Center(
+      child: Text("No expense found. Try adding some"),
+    );
+    if (_registeredExpenses.isNotEmpty) {
+      startingMessage = ExpensesList(
+        expenses: _registeredExpenses,
+        onRemoveExpense: _removeExpense,
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -91,10 +89,8 @@ class _ExpensesState extends State<Expenses> {
       ),
       body: Column(
         children: [
-          const Text("The Chart"),
-          Expanded(
-              child:startingMessage 
-              ),
+          Chart(expenses: _registeredExpenses),
+          Expanded(child: startingMessage),
         ],
       ),
     );
