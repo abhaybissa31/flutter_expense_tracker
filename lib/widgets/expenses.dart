@@ -56,6 +56,7 @@ class _ExpensesState extends State<Expenses> {
     // context have widget metadata information related to widget and widget's ui position
     // builder returns a function. here ctx is a context of the bottomModal
     showModalBottomSheet(
+        useSafeArea: true,
         context: context,
         builder: (ctx) => NewExpense(
               onAddExpense: _addExpense,
